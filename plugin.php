@@ -15,7 +15,8 @@ License: GPLv2 or later
 class Wordfence_Cloudfront_IP_Updater {
 
 	protected $cron_name = 'wfcfipu_cron_hook';
-	protected $last_name_option_name = 'wfcfipu_last_ran';
+	protected $last_run_option_name = 'wfcfipu_last_ran';
+	protected $last_error_option_name = 'wfcfipu_last_error';
 	protected $cloudfront_ip_addresses_url = 'http://d7uri8nf7uskq.cloudfront.net/tools/list-cloudfront-ips';
 
 	function __construct() {
@@ -34,27 +35,38 @@ class Wordfence_Cloudfront_IP_Updater {
 	 * @return bool
 	 */
 	protected function refresh_ips() {
-		if(!defined('WORDFENCE_VERSION')) return false;
-
-		//download list of IPs
-		$ips = file_get_contents($this->cloudfront_ip_addresses_url);
-		if(false === $ips) {
+		if(!defined('WORDFENCE_VERSION')) {
+			update_option($this->last_error_option_name, 'Wordfence was not active. If you have since enabled Wordfence, please deactivate and reactivate this plugin.', false);
 			return false;
 		}
-		$ips = json_decode($ips, true);
-		if(empty($ips)) {
+
+		// Download list of IPs
+		$ips = wp_remote_get($this->cloudfront_ip_addresses_url);
+		if(is_wp_error($ips)) {
+			update_option($this->last_error_option_name, 'Unable to connect to Cloudfront. ' . $ips->get_error_message(), false);
+			return false;
+		} elseif(200 !== $ips['response']['code']) {
+			update_option($this->last_error_option_name, 'Unable to connect to Cloudfront. Response code ' . $ips['response']['code'] . '.', false);
+			return false;
+		}
+		$ips = json_decode($ips['body'], true);
+		if(empty($ips) || empty($ips['CLOUDFRONT_GLOBAL_IP_LIST'] || empty($ips['CLOUDFRONT_REGIONAL_EDGE_IP_LIST']))) {
+			update_option($this->last_error_option_name, 'Unable to parse response from Cloudfront', false);
 			return false;
 		}
 		$ips = implode("\n", array_merge($ips['CLOUDFRONT_GLOBAL_IP_LIST'], $ips['CLOUDFRONT_REGIONAL_EDGE_IP_LIST']));
 
+		// Put those IPs into the Wordfence option
 		global $wpdb;
 		$table = wfDB::networkTable('wfConfig');
 		$updated = $wpdb->query($wpdb->prepare("UPDATE $table SET val = %s WHERE name = 'howGetIPs_trusted_proxies'", $ips));
 		if(false === $updated) {
+			update_option($this->last_error_option_name, 'Unable to save IP addresses to Wordfence options', false);
 			return false;
 		}
 		wp_cache_delete('alloptions', 'wordfence');
-		return (bool) update_option($this->last_name_option_name, time(), false);
+		delete_option($this->last_error_option_name);
+		return (bool) update_option($this->last_run_option_name, time(), false);
 	}
 
 	function cron() {
@@ -71,12 +83,17 @@ class Wordfence_Cloudfront_IP_Updater {
 	}
 
 	function admin_notices() {
+		$data = get_plugin_data(__FILE__);
+		$plugin_name = $data['Name'];
 		if(!defined('WORDFENCE_VERSION')) {
-			_e('<div class="notice notice-error"><p><i>Cloudfront Proxy IP Addresses for Wordfence</i> requires <i>Wordfence</i> to be active</p></div>');
+			printf(__('<div class="notice notice-error"><p><i>%s</i> requires <i>Wordfence</i> to be active</p></div>'), $plugin_name);
 			return;
 		}
-		if(false === get_option($this->last_name_option_name, false)) {
-			_e('<div class="notice notice-error"><p><i>Cloudfront Proxy IP Addresses for Wordfence</i> has not yet been able to get Cloudfront proxy IP addresses</p></div>');
+		if(false === get_option($this->last_run_option_name, false)) {
+			printf(__('<div class="notice notice-error"><p><i>%s</i> has not been able to get Cloudfront proxy IP addresses</p></div>'), $plugin_name);
+		}
+		if(false !== get_option($this->last_error_option_name, false)) {
+			printf(__('<div class="notice notice-error"><p><i>%s</i> error on last run: %s</p></div>'), $plugin_name, esc_html(__(get_option($this->last_error_option_name))));
 		}
 	}
 
@@ -85,7 +102,7 @@ class Wordfence_Cloudfront_IP_Updater {
 	 */
 	function plugin_row_meta($plugin_meta, $plugin_file, $plugin_data, $status) {
 		if('wordfence-cloudfront-ips/plugin.php' !== $plugin_file) return;
-		$last_ran = get_option($this->last_name_option_name, false);
+		$last_ran = get_option($this->last_run_option_name, false);
 		if(false === $last_ran) {
 			$plugin_meta[] = __('Has not yet run');
 		} else {
