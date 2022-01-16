@@ -59,7 +59,7 @@ class Wordfence_Cloudfront_IP_Updater {
 			return false;
 		}
 		$ips = array_map(function($el) { return $el['ip_prefix']; }, $ips['prefixes']);
-		$ips = implode("\n", $ips);
+		$ips = implode("\n", array_unique($ips));
 
 		// Put those IPs into the Wordfence option
 		global $wpdb;
