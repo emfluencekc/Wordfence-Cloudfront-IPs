@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Wordfence Cloudfront Proxy IP Addresses
+Plugin Name: Cloudfront Proxy IP Addresses for Wordfence
 Plugin URI: https://github.com/emfluencekc/Wordfence-Cloudfront-IPs
 Description: Automatically add and update the proxy IP addresses for Cloudfront in Wordfence.
 Author: emfluence
@@ -72,11 +72,11 @@ class Wordfence_Cloudfront_IP_Updater {
 
 	function admin_notices() {
 		if(!defined('WORDFENCE_VERSION')) {
-			_e('<div class="notice notice-error"><p><i>Wordfence Cloudfront Proxy IP Addresses</i> requires <i>Wordfence</i> to be active</p></div>');
+			_e('<div class="notice notice-error"><p><i>Cloudfront Proxy IP Addresses for Wordfence</i> requires <i>Wordfence</i> to be active</p></div>');
 			return;
 		}
 		if(false === get_option($this->last_name_option_name, false)) {
-			_e('<div class="notice notice-error"><p><i>Wordfence Cloudfront Proxy IP Addresses</i> has not yet been able to get Cloudfront proxy IP addresses</p></div>');
+			_e('<div class="notice notice-error"><p><i>Cloudfront Proxy IP Addresses for Wordfence</i> has not yet been able to get Cloudfront proxy IP addresses</p></div>');
 		}
 	}
 
