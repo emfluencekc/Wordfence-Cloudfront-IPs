@@ -1,4 +1,4 @@
-=== Wordfence Cloudfront Proxy IP Address Updater ===
+=== Wordfence Cloudfront Proxy IP Addresses ===
 Tags: security, wordfence, cloudfront, proxy
 Requires at least: 5.0
 Tested up to: 5.8.3
@@ -27,7 +27,7 @@ https://github.com/emfluencekc/Wordfence-Cloudfront-IPs
 
 1. Upload the plugin files to the `/wp-content/plugins/wordfence-cloudfront-ips` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
-3. That's it. This plugin has no settings page, and work with both individual and network setups.
+3. That's it. This plugin has no settings page, and work with both individual and network setups. Check the plugin's row on the admin plugins page to see how recently this plugin has updated IP addresses.
 
 == Changelog ==
 
