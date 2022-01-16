@@ -17,7 +17,11 @@ class Wordfence_Cloudfront_IP_Updater {
 	protected $cron_name = 'wfcfipu_cron_hook';
 	protected $last_run_option_name = 'wfcfipu_last_ran';
 	protected $last_error_option_name = 'wfcfipu_last_error';
-	protected $cloudfront_ip_addresses_url = 'http://d7uri8nf7uskq.cloudfront.net/tools/list-cloudfront-ips';
+
+	/**
+	 * @see https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/LocationsOfEdgeServers.html
+	 */
+	protected $cloudfront_ip_addresses_url = 'https://ip-ranges.amazonaws.com/ip-ranges.json';
 
 	function __construct() {
 		if ( ! wp_next_scheduled( $this->cron_name ) ) {
@@ -50,11 +54,12 @@ class Wordfence_Cloudfront_IP_Updater {
 			return false;
 		}
 		$ips = json_decode($ips['body'], true);
-		if(empty($ips) || empty($ips['CLOUDFRONT_GLOBAL_IP_LIST'] || empty($ips['CLOUDFRONT_REGIONAL_EDGE_IP_LIST']))) {
+		if(empty($ips) || empty($ips['prefixes'])) {
 			update_option($this->last_error_option_name, 'Unable to parse response from Cloudfront', false);
 			return false;
 		}
-		$ips = implode("\n", array_merge($ips['CLOUDFRONT_GLOBAL_IP_LIST'], $ips['CLOUDFRONT_REGIONAL_EDGE_IP_LIST']));
+		$ips = array_map(function($el) { return $el['ip_prefix']; }, $ips['prefixes']);
+		$ips = implode("\n", $ips);
 
 		// Put those IPs into the Wordfence option
 		global $wpdb;
