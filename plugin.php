@@ -26,6 +26,7 @@ class Wordfence_Cloudfront_IP_Updater {
 		register_activation_hook(__FILE__, [$this, 'activate']);
 		register_deactivation_hook( __FILE__, [$this, 'deactivate'] );
 		add_action('admin_notices', [$this, 'admin_notices']);
+		add_action('network_admin_notices', [$this, 'admin_notices']);
 		add_filter('plugin_row_meta', [$this, 'plugin_row_meta'], 10, 4);
 	}
 
@@ -71,11 +72,11 @@ class Wordfence_Cloudfront_IP_Updater {
 
 	function admin_notices() {
 		if(!defined('WORDFENCE_VERSION')) {
-			_e('<div class="notice notice-error"><p><i>Wordfence Cloudfront Proxy IP Address Updater</i> requires <i>Wordfence</i> to be installed</p></div>');
+			_e('<div class="notice notice-error"><p><i>Wordfence Cloudfront Proxy IP Addresses</i> requires <i>Wordfence</i> to be active</p></div>');
 			return;
 		}
 		if(false === get_option($this->last_name_option_name, false)) {
-			_e('<div class="notice notice-error"><p><i>Wordfence Cloudfront Proxy IP Address Updater</i> has not yet been able to get Cloudfront proxy IP addresses</p></div>');
+			_e('<div class="notice notice-error"><p><i>Wordfence Cloudfront Proxy IP Addresses</i> has not yet been able to get Cloudfront proxy IP addresses</p></div>');
 		}
 	}
 
