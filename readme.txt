@@ -1,4 +1,4 @@
-=== Cloudfront Proxy IP Addresses for Wordfence ===
+=== Proxy IP Addresses for Cloudfront with Wordfence ===
 Tags: security, wordfence, cloudfront, proxy
 Requires at least: 5.0
 Tested up to: 5.8.3
