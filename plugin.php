@@ -64,7 +64,7 @@ class Wordfence_Cloudfront_IP_Updater {
 		// Put those IPs into the Wordfence option
 		global $wpdb;
 		$table = wfDB::networkTable('wfConfig');
-		$updated = $wpdb->query($wpdb->prepare("UPDATE $table SET val = %s WHERE name = 'howGetIPs_trusted_proxies'", $ips));
+		$updated = $wpdb->query($wpdb->prepare("UPDATE %1s SET val = %s WHERE name = 'howGetIPs_trusted_proxies'", $table, $ips));
 		if(false === $updated) {
 			update_option($this->last_error_option_name, 'Unable to save IP addresses to Wordfence options', false);
 			return false;
@@ -91,14 +91,14 @@ class Wordfence_Cloudfront_IP_Updater {
 		$data = get_plugin_data(__FILE__);
 		$plugin_name = $data['Name'];
 		if(!defined('WORDFENCE_VERSION')) {
-			printf(__('<div class="notice notice-error"><p><i>%s</i> requires <i>Wordfence</i> to be active</p></div>'), $plugin_name);
+			echo wp_kses_post(sprintf(__('<div class="notice notice-error"><p><i>%s</i> requires <i>Wordfence</i> to be active</p></div>'), $plugin_name));
 			return;
 		}
 		if(false === get_option($this->last_run_option_name, false)) {
-			printf(__('<div class="notice notice-error"><p><i>%s</i> has not been able to get Cloudfront proxy IP addresses</p></div>'), $plugin_name);
+			echo wp_kses_post(sprintf(__('<div class="notice notice-error"><p><i>%s</i> has not been able to get Cloudfront proxy IP addresses</p></div>'), $plugin_name));
 		}
 		if(false !== get_option($this->last_error_option_name, false)) {
-			printf(__('<div class="notice notice-error"><p><i>%s</i> error on last run: %s</p></div>'), $plugin_name, esc_html(__(get_option($this->last_error_option_name))));
+			echo wp_kses_post(sprintf(__('<div class="notice notice-error"><p><i>%s</i> error on last run: %s</p></div>'), $plugin_name, __(get_option($this->last_error_option_name))));
 		}
 	}
 
