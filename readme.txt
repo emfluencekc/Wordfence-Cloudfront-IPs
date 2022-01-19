@@ -16,12 +16,15 @@ If you have Cloudfront in front of Wordpress and are using Wordfence, this plugi
 
 If you don't provide Cloudfront's IP addresses to Wordfence, any bad behavior out there can get Cloudfront itself blocked by Wordfence - and then no one will be able to access your site.
 
-This plugin addds and automatically updates the proxy IP addresses for Cloudfront in Wordfence, so that Wordfence can correctly identify the end user's IP address.
+This plugin downloads Cloudfront's IP address list directly from Amazon Web Services (AWS). Then it adds and automatically updates the proxy IP addresses for Cloudfront in Wordfence, so that Wordfence can correctly identify the end user's IP address.
 
-Cloudfront updates its list of IP addresses every now and then. Don't manually add IP addresses, and then try to keep track of Cloudfront IP address changes. Just install this plugin and stop worrying!
+AWS updates its list of IP addresses every now and then. Don't manually add IP addresses, and then try to keep track of Cloudfront IP address changes. Just install this plugin and stop worrying!
 
 Want to change how this plugin works, or add to it? Fork it on GitHub!
 https://github.com/emfluencekc/Wordfence-Cloudfront-IPs
+
+Documentation and the list of Cloudfront IP addresses used by this plugin can be found here:
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/LocationsOfEdgeServers.html
 
 == Installation ==
 
