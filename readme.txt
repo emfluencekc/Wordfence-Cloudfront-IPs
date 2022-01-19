@@ -23,7 +23,7 @@ AWS updates its list of IP addresses every now and then. Don't manually add IP a
 Want to change how this plugin works, or add to it? Fork it on GitHub!
 https://github.com/emfluencekc/Wordfence-Cloudfront-IPs
 
-Documentation and the list of Cloudfront IP addresses used by this plugin can be found here:
+Documentation, privacy, terms of use, and the list of IP addresses that are used by this plugin can be found here:
 https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/LocationsOfEdgeServers.html
 
 == Installation ==
