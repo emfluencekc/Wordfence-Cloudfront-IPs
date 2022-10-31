@@ -1,7 +1,7 @@
 === Proxy IP Addresses for Cloudfront with Wordfence ===
 Tags: security, wordfence, cloudfront, proxy
 Requires at least: 5.0
-Tested up to: 5.8.3
+Tested up to: 6.1
 Requires PHP: 5.6
 Stable tag: 1.0
 Contributors: emfluencekc, mightyturtle
