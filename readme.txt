@@ -1,9 +1,9 @@
 === Proxy IP Addresses for Cloudfront with Wordfence ===
 Tags: security, wordfence, cloudfront, proxy
 Requires at least: 5.0
-Tested up to: 6.1
+Tested up to: 6.4.3
 Requires PHP: 5.6
-Stable tag: 1.0
+Stable tag: 1.1
 Contributors: emfluencekc, mightyturtle
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -36,3 +36,6 @@ https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/LocationsOfEd
 
 = 1.0 =
 Initial release. Install this plugin and your proxy IP addresses are taken care of.
+
+= 1.1 =
+Fix. Plugin list table listing error.
