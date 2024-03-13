@@ -106,6 +106,7 @@ class Wordfence_Cloudfront_IP_Updater {
 	 * Add some basic reporting on the admin plugins page, since we don't have a settings page of our own
 	 */
 	function plugin_row_meta($plugin_meta, $plugin_file, $plugin_data, $status) {
+		if('wordfence-cloudfront-ips/plugin.php' !== $plugin_file) return array();
 		$last_ran = get_option($this->last_run_option_name, false);
 		if(false === $last_ran) {
 			$plugin_meta[] = __('Has not yet run');
